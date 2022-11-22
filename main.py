@@ -1,16 +1,34 @@
-# This is a sample Python script.
+import requests
+from bs4 import BeautifulSoup
+import lxml
+from fake_useragent import UserAgent
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def createHeader():
+    ua = UserAgent()
+    fake_ua = {'user-agent': ua.random}
+    return fake_ua
+
+def yandexSearch():
+    url = 'https://yandex.ru/search/?text='
+    return url
+
+def getYandexSearch():
+    user_input = input('Введите запрос : ')
+    url = yandexSearch() + user_input
+    header = createHeader()
+    response = requests.get(url=url, headers=header)
+    response.encoding = 'utf-8'
+    return response
+
+def googleSearch():
+    pass
+
+def main():
+    response = getYandexSearch()
+    soap = BeautifulSoup(response.text, 'lxml')
+    arr = soap.find('u1', class_='serp-list serp-list_left_yes')
+    print(arr)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
