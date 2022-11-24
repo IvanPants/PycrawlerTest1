@@ -1,34 +1,39 @@
 import requests
 from bs4 import BeautifulSoup
-import lxml
+import html.parser
 from fake_useragent import UserAgent
 
-def createHeader():
+
+def create_header():
     ua = UserAgent()
     fake_ua = {'user-agent': ua.random}
     return fake_ua
 
-def yandexSearch():
+
+def yandex_search():
     url = 'https://yandex.ru/search/?text='
     return url
 
-def getYandexSearch():
+
+def get_yandex_search():
     user_input = input('Введите запрос : ')
-    url = yandexSearch() + user_input
-    header = createHeader()
+    url = yandex_search() + user_input
+    header = create_header()
     response = requests.get(url=url, headers=header)
     response.encoding = 'utf-8'
     return response
 
-def googleSearch():
+
+def google_search():
     pass
 
-def main():
-    response = getYandexSearch()
-    soap = BeautifulSoup(response.text, 'lxml')
-    arr = soap.find('u1', class_='serp-list serp-list_left_yes')
-    print(arr)
 
+def main():
+    response = get_yandex_search()
+    soup = BeautifulSoup(response.content, 'html.parser')
+    with open('yandex_search_out.html', 'w', encoding='utf-8') as search_file:
+        search_file.write(str(soup.prettify()))
+    
 
 if __name__ == '__main__':
     main()
